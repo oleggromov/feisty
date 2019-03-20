@@ -1,20 +1,11 @@
 const objectDeepMap = (obj, fn) => {
-  if (typeof obj !== 'object') {
-    return
-  }
-
-  const queue = [obj]
-  for (let i = 0; i < queue.length; i++) {
-    const current = queue[i]
-
-    for (let key in current) {
-      if (typeof current[key] === 'object') {
-        queue.push(current[key])
-        continue
-      }
-
-      fn(key, current[key])
+  for (let key in obj) {
+    if (typeof obj[key] === 'object') {
+      objectDeepMap(obj[key], fn)
+      continue
     }
+
+    obj[key] = fn(key, obj[key])
   }
 }
 

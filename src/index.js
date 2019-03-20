@@ -1,4 +1,4 @@
-const build = require('./commands/build')
+const build = require('./build')
 
 module.exports = {
   build
