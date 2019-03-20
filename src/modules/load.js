@@ -3,9 +3,9 @@ const glob = require('glob')
 const { readYaml, readMarkdown } = require('./readContent')
 
 const getAbsolutePath = (rootDir, contentPath, pagePath) => {
-  if (contentPath.indexOf('/') === 0) {
+  if (contentPath.match(/^\//)) {
     return contentPath
-  } else if (contentPath.indexOf('~/') === 0) {
+  } else if (contentPath.match(/^~\//)) {
     return path.join(rootDir, contentPath.slice(2))
   }
   return path.join(rootDir, path.parse(pagePath).dir, contentPath)
@@ -29,7 +29,7 @@ const loadList = ({ rootDir, listGlob, pagePath }) => {
 
   return listPaths.reduce((acc, itemPath) => {
     const key = path.relative(rootDir, itemPath)
-    // TODO: do we need to read the contents and lists again? 
+    // TODO: do we need to read the contents and lists again?
     acc[key] = loadContent({ rootDir, contentPath: itemPath, pagePath })
     return acc
   }, {})
