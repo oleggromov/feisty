@@ -1,11 +1,5 @@
-class Feisty {
-  constructor() {
+const build = require('./commands/build')
 
-  }
-
-  build() {
-    console.log('Building')
-  }
+module.exports = {
+  build
 }
-
-module.exports = Feisty
