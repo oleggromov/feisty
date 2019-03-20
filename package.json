@@ -1,0 +1,14 @@
+{
+  "name": "feisty",
+  "version": "0.1.0",
+  "bin": {
+    "feisty": "bin/feisty"
+  },
+  "main": "src/index.js",
+  "repository": "git@github.com:oleggromov/feisty.git",
+  "author": "Oleg Gromov <mail@oleggromov.com>",
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^13.2.2"
+  }
+}

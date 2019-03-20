@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+'use strict'
+
+const feistyCLI = require('../src/cli')
+feistyCLI()
