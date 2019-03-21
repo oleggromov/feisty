@@ -1,7 +1,8 @@
 # Feisty
 
 Feisty is a simple, zero-configuration website build tool based on the filesystem
-structure and React components to build small websites.
+structure and React components and intended to enable small to medium website 
+creation.
 
 ## How to Run
 You can run it in dev mode and use to pre-build pages of your website.
