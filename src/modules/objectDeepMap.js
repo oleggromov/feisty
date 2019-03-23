@@ -1,5 +1,5 @@
 const objectDeepMap = (obj, fn) => {
-  for (let key in obj) {
+  for (const key in obj) {
     if (typeof obj[key] === 'object') {
       objectDeepMap(obj[key], fn)
       continue
