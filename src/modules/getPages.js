@@ -9,10 +9,6 @@ const getPages = ({ cwd, contentFolder, indexFile }) => {
   const pagePaths = glob.sync(path.join(cwd, `${contentFolder}/**/${indexFile}`))
   const contentDir = path.join(cwd, contentFolder)
 
-  if (!pagePaths.length) {
-    throw new Error(`Cannot find any ${indexFile} files in ${contentFolder}/`)
-  }
-
   // TODO make it return an array
   const pages = readPages({ relativeTo: contentDir, pagePaths })
 

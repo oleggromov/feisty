@@ -3,9 +3,7 @@ const getPages = require('./modules/getPages')
 const contentFolder = 'content'
 const indexFile = 'index.yml'
 
-const renderAllMarkdown = page => page
 const renderComponent = page => '<html></html>'
-const getUrl = page => '/test/url'
 const writePage = page => page
 
 module.exports = ({ cwd }) => {
@@ -14,9 +12,8 @@ module.exports = ({ cwd }) => {
   const pages = getPages({ cwd, contentFolder, indexFile })
   for (pagePath in pages) {
     let current = pages[pagePath]
-    renderAllMarkdown(current)
     current.html = renderComponent(current)
-    current.url = getUrl(current)
+    current.htmlPath = pagePath.replace('.yml', '.html')
     writePage(current)
   }
 
