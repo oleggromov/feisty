@@ -19,7 +19,6 @@
     "marked": "^0.6.1",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
-    "require-from-memory": "^1.0.0",
     "yargs": "^13.2.2"
   }
 }
