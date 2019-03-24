@@ -2,8 +2,9 @@ const path = require('path')
 const getPages = require('./modules/getPages')
 const renderComponent = require('./modules/renderComponent')
 const { cleanDir, writePage } = require('./modules/fsUtils')
+const transpile = require('./modules/transpile')
 
-module.exports = ({ cwd }) => {
+module.exports = async ({ cwd }) => {
   const start = process.hrtime()
 
   const pages = getPages({ cwd,
@@ -12,10 +13,13 @@ module.exports = ({ cwd }) => {
   })
 
   cleanDir({ cwd, folder: 'build' })
+  const componentDir = await transpile({ cwd, componentDir: path.resolve(cwd, 'components') })
+  console.log(`Transpiled components put into: ${componentDir}`)
+
   for (pagePath in pages) {
     let current = pages[pagePath]
     current.htmlPath = pagePath.replace('.yml', '.html')
-    current.html = renderComponent({ componentDir: path.resolve(cwd, 'components') }, current)
+    current.html = renderComponent({ componentDir }, current)
     writePage({ cwd, buildFolder: 'build' }, current)
     break
   }
