@@ -1,20 +1,21 @@
 const getPages = require('./modules/getPages')
-
-const contentFolder = 'content'
-const indexFile = 'index.yml'
-
-const renderComponent = page => '<html></html>'
-const writePage = page => page
+const renderComponent = page => `<html>\n${page.htmlPath}\n</html>`
+const { cleanDir, writePage } = require('./modules/fsUtils')
 
 module.exports = ({ cwd }) => {
   const start = process.hrtime()
 
-  const pages = getPages({ cwd, contentFolder, indexFile })
+  const pages = getPages({ cwd,
+    contentFolder: 'content',
+    indexFile: 'index.yml'
+  })
+
+  cleanDir({ cwd, folder: 'build' })
   for (pagePath in pages) {
     let current = pages[pagePath]
-    current.html = renderComponent(current)
     current.htmlPath = pagePath.replace('.yml', '.html')
-    writePage(current)
+    current.html = renderComponent(current)
+    writePage({ cwd, buildFolder: 'build' }, current)
   }
 
   console.log(pages)
