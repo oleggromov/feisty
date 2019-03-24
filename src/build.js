@@ -13,7 +13,7 @@ module.exports = async ({ cwd }) => {
   })
 
   cleanDir({ cwd, folder: 'build' })
-  const componentDir = await transpile({ cwd, componentDir: path.resolve(cwd, 'components') })
+  const componentDir = await transpile({ componentDir: path.resolve(cwd, 'components') })
   console.log(`Transpiled components put into: ${componentDir}`)
 
   for (pagePath in pages) {

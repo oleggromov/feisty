@@ -10,10 +10,14 @@ const getDepsDir = () => {
   return path.join(root, 'node_modules')
 }
 
-module.exports = async ({ cwd, componentDir }) => {
+module.exports = async ({ componentDir }) => {
   const tmpDir = createTemp()
+  const babelrc = path.join(
+    path.resolve(path.parse(require.main.filename).dir, '..'),
+    '.babelrc'
+  )
   const babelCmd = `$(yarn bin)/babel ${componentDir} --out-dir ${tmpDir}\
-    --presets=@babel/preset-env,@babel/preset-react`
+    --config-file ${babelrc}`
 
   await exec(`ln -s ${getDepsDir()} ${tmpDir}`)
   const { stdout, stderr } = await exec(babelCmd, { cwd: __dirname })

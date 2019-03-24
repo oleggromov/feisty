@@ -1,7 +1,7 @@
 # Feisty
 
 Feisty is a simple, zero-configuration website build tool based on the filesystem
-structure and React components and intended to enable small to medium website 
+structure and React components and intended to enable small to medium website
 creation.
 
 ## How to Run
@@ -30,7 +30,3 @@ All `index.yml` files comprise the structure of your website. Each file is read,
 the content is processed with either a Markdown or a YAML parser, and passed to
 the corresponding component so it can render the page. The page is then put on
 the filesystem according to its original placement.
-
-## ToDo
-
-- URLs
