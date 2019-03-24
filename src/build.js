@@ -1,5 +1,6 @@
+const path = require('path')
 const getPages = require('./modules/getPages')
-const renderComponent = page => `<html>\n${page.htmlPath}\n</html>`
+const renderComponent = require('./modules/renderComponent')
 const { cleanDir, writePage } = require('./modules/fsUtils')
 
 module.exports = ({ cwd }) => {
@@ -14,11 +15,12 @@ module.exports = ({ cwd }) => {
   for (pagePath in pages) {
     let current = pages[pagePath]
     current.htmlPath = pagePath.replace('.yml', '.html')
-    current.html = renderComponent(current)
+    current.html = renderComponent({ componentDir: path.resolve(cwd, 'components') }, current)
     writePage({ cwd, buildFolder: 'build' }, current)
+    break
   }
 
-  console.log(pages)
+  // console.log(pages)
   // console.log(JSON.stringify(pages['notes/index.yml'].notes, null, 2))
 
   const ms = Math.ceil(process.hrtime(start)[1] / 1e6)
