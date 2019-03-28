@@ -4,6 +4,7 @@ const renderComponent = require('./modules/renderComponent')
 const { cleanDir, writePage } = require('./modules/fsUtils')
 const transpile = require('./modules/transpile')
 const getCssDependencies = require('./modules/getCssDependencies')
+const getTranspiledCss = require('./modules/getTranspiledCss')
 
 module.exports = async ({ cwd }) => {
   const start = process.hrtime()
@@ -24,15 +25,22 @@ module.exports = async ({ cwd }) => {
     let current = pages[pagePath]
     usedComponents.push(current.component)
     current.htmlPath = pagePath.replace('.yml', '.html')
-    // current.html = renderComponent({ componentDir }, current)
-    // writePage({ cwd, buildFolder: 'build' }, current)
-    // break
+    current.html = renderComponent({ componentDir }, current)
+    writePage({ cwd, buildFolder: 'build' }, current)
+    break
   }
 
-  console.log(await getCssDependencies({
+  console.log(usedComponents)
+
+  const cssImports = await getCssDependencies({
     entries: usedComponents.map(component =>
-      path.join(componentSourceDir, component + '.js'))
-  }))
+      path.join(componentSourceDir, component + '.js')),
+    baseDir: componentSourceDir
+  })
+
+  console.log(cssImports)
+
+  getTranspiledCss({ rootDir: componentSourceDir, list: cssImports })
 
   // console.log(pages)
   // console.log(JSON.stringify(pages['notes/index.yml'].notes, null, 2))
