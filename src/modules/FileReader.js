@@ -1,16 +1,10 @@
+const path = require('path')
+const promisify = require('util').promisify
+const readFile = promisify(require('fs').readFile)
 const EventEmitter = require('events')
 const minimatch = require('minimatch')
-const glob = require('glob')
-const path = require('path')
-const fs = require('fs')
 const flatten = require('./flatten')
-
-const expandGlob = pattern => {
-  if (glob.hasMagic(pattern)) {
-    return glob.sync(pattern)
-  }
-  return pattern
-}
+const expandGlob = require('./expandGlob')
 
 class FileReader extends EventEmitter {
   constructor({ baseDir }) {
@@ -26,14 +20,20 @@ class FileReader extends EventEmitter {
 
   read(...patterns) {
     const files = flatten(patterns.map(expandGlob))
-    files.forEach(this.emitFirstMatch.bind(this))
+    files.forEach(file => this.emitFirstMatch(file))
   }
 
-  emitFirstMatch(file) {
+  async emitFirstMatch(file) {
     const name = path.parse(file).base
+    const fullPath = path.join(this.baseDir, file)
     for (let pattern of this.patterns) {
       if (minimatch(name, pattern)) {
-        this.emit(pattern, { file })
+        try {
+          const content = await readFile(fullPath, 'utf8')
+          this.emit(pattern, { file, content })
+        } catch (err) {
+          this.emit('error', err)
+        }
         break
       }
     }
