@@ -5,9 +5,10 @@ const objectDeepMap = require('./objectDeepMap')
 const readPages = require('./readPages')
 const processIncludes = require('./processIncludes')
 
-const getPages = ({ cwd, contentFolder, indexFile }) => {
-  const pagePaths = glob.sync(path.join(cwd, `${contentFolder}/**/${indexFile}`))
-  const contentDir = path.join(cwd, contentFolder)
+const getPages = ({ cwd, pattern }) => {
+  const absPath = path.join(cwd, pattern)
+  const pagePaths = glob.sync(absPath)
+  const contentDir = path.parse(absPath).dir.replace(/\*\*$/, '')
 
   // TODO make it return an array
   const pages = readPages({ relativeTo: contentDir, pagePaths })
