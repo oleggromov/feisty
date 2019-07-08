@@ -5,16 +5,14 @@ module.exports = async ({ cwd }) => {
   const start = process.hrtime()
 
   const pages = getPages({ cwd,
-    contentFolder: 'content',
+    contentFolder: 'pages',
     indexFile: 'index.yml'
   })
-
-  console.log(Object.keys(pages))
 
   cleanDir({ cwd, folder: 'build' })
 
   for (page in pages) {
-    // console.log(`Writing ${page}...`)
+    console.log(`Writing ${page}...`)
     writePage({ cwd, buildFolder: 'build' }, {
       path: page.replace(/\.yml$/, '.json'),
       data: JSON.stringify(pages[page], null, 2)

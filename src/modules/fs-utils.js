@@ -9,8 +9,6 @@ const writePage = ({ cwd, buildFolder }, page) => {
   const filename = path.join(cwd, buildFolder, page.path)
   const dir = path.parse(filename).dir
 
-  console.log(filename)
-
   if (dir) {
     fs.mkdirSync(dir, { recursive: true })
   }
