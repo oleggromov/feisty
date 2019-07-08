@@ -4,7 +4,6 @@
   "bin": {
     "feisty": "bin/feisty"
   },
-  "main": "src/index.js",
   "repository": "git@github.com:oleggromov/feisty.git",
   "author": "Oleg Gromov <mail@oleggromov.com>",
   "license": "MIT",
@@ -17,5 +16,8 @@
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3"
   }
 }

@@ -2,21 +2,37 @@ const path = require('path')
 const getPages = require('./modules/getPages')
 const renderComponent = require('./modules/renderComponent')
 const { cleanDir, writePage } = require('./modules/fsUtils')
+const Bundler = require('parcel-bundler')
 
 const FileReader = require('./modules/FileReader')
 const FileWriter = require('./modules/FileWriter')
 
+const buildComponents = async () => {
+  const options = {
+    outDir: './parcel_dist',
+    watch: false,
+    minify: true,
+    sourceMaps: false
+  }
+  const bundler = new Bundler('components/**/*.js', options)
+
+  return bundle = await bundler.bundle()
+}
+
 module.exports = async ({ cwd }) => {
-  const start = process.hrtime()
+  const bundle = await buildComponents()
+  console.log(bundle)
 
-  const reader = new FileReader({ baseDir: cwd })
-  const writer = new FileWriter({ baseDir: cwd })
+  // const start = process.hrtime()
 
-  reader.on('*.yml', (...args) => {
-    console.log('YAML', args[0].file)
-  })
-
-  reader.read('content/**/index.yml')
+  // const reader = new FileReader({ baseDir: cwd })
+  // const writer = new FileWriter({ baseDir: cwd })
+  //
+  // reader.on('*.yml', (...args) => {
+  //   console.log('YAML', args[0].file)
+  // })
+  //
+  // reader.read('content/**/index.yml')
 //
 //   // const pages = getPages({ cwd, pattern: 'content/**/index.yml' })
 //   //
