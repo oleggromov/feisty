@@ -1,9 +1,9 @@
 const path = require('path')
 const glob = require('glob')
 
-const objectDeepMap = require('./objectDeepMap')
-const readPages = require('./readPages')
-const processIncludes = require('./processIncludes')
+const objectDeepMap = require('./object-deep-map')
+const readPages = require('./read-pages')
+const processIncludes = require('./process-includes')
 
 const getPages = ({ cwd, contentFolder, indexFile }) => {
   const pagePaths = glob.sync(path.join(cwd, `${contentFolder}/**/${indexFile}`))

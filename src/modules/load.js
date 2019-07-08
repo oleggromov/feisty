@@ -1,6 +1,6 @@
 const path = require('path')
 const glob = require('glob')
-const { readYaml, readMarkdown } = require('./readContent')
+const { readYaml, readMarkdown } = require('./read-content')
 
 const getAbsolutePath = (rootDir, contentPath, pagePath) => {
   if (contentPath.match(/^\//)) {
