@@ -1,12 +1,15 @@
-const objectDeepMap = (obj, fn) => {
-  for (const key in obj) {
-    if (typeof obj[key] === 'object') {
-      objectDeepMap(obj[key], fn)
-      continue
-    }
+const objectDeepMap = (source, fn) => {
+  const result = {}
 
-    obj[key] = fn(key, obj[key])
+  for (const key in source) {
+    if (typeof source[key] === 'object') {
+      result[key] = objectDeepMap(source[key], fn)
+    } else {
+      result[key] = fn(key, source[key])
+    }
   }
+
+  return result
 }
 
 module.exports = objectDeepMap
