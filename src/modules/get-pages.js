@@ -11,13 +11,14 @@ const getPages = ({ cwd, contentFolder, indexFile }) => {
 
   // TODO make it return an array
   const pages = readPages({ relativeTo: contentDir, pagePaths })
+  const processed = {}
 
   for (let pagePath in pages) {
-    objectDeepMap(pages[pagePath], (...args) =>
+    processed[pagePath] = objectDeepMap(pages[pagePath], (...args) =>
       processIncludes({ pagePath, contentDir }, ...args))
   }
 
-  return pages
+  return processed
 }
 
 module.exports = getPages
