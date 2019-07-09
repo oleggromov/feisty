@@ -1,5 +1,7 @@
 # Feisty
 
+💣 WIP currently - handle with care 💥
+
 Feisty is a simple, zero-configuration website build tool based on the filesystem
 structure and React components and intended to enable small to medium website
 creation.
