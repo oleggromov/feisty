@@ -30,4 +30,38 @@ describe('objectDeepMap', () => {
       c: 101
     })
   })
+
+  it('works with arrays of objects', () => {
+    const withArrays = {
+      something: 'true',
+      list: [
+        { a: 1 },
+        { b: 'hello' }
+      ]
+    }
+    const result = objectDeepMap(withArrays, (key, value) => value + 1)
+    expect(result).toMatchObject({
+      something: 'true1',
+      list: [
+        { a: 2 },
+        { b: 'hello1' }
+      ]
+    })
+  })
+
+  it('works with arrays of scalars', () => {
+    const withArrays = {
+      greeting: [
+        'hello',
+        'world'
+      ]
+    }
+    const result = objectDeepMap(withArrays, (key, value) => value + 1)
+    expect(result).toMatchObject({
+      greeting: [
+        'hello1',
+        'world1'
+      ]
+    })
+  })
 })
