@@ -11,8 +11,10 @@ module.exports = function () {
 
   if (command in feisty) {
     feisty[command]({ cwd: process.cwd() })
+    process.exit(0)
   } else {
     console.error(unknownCommand)
   }
+
   process.exit(1)
 }
