@@ -6,15 +6,14 @@ Please use the following:
   feisty build
 `
 
-module.exports = function () {
+module.exports = async function () {
   const command = argv._[0]
 
   if (command in feisty) {
-    feisty[command]({ cwd: process.cwd() })
+    await feisty[command]({ cwd: process.cwd() })
     process.exit(0)
-  } else {
-    console.error(unknownCommand)
   }
 
+  console.error(unknownCommand)
   process.exit(1)
 }

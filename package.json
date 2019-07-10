@@ -17,6 +17,9 @@
     "js-yaml": "^3.12.2",
     "marked": "^0.6.1",
     "minimatch": "^3.0.4",
+    "parcel-bundler": "^1.12.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "yargs": "^13.2.2"
   },
   "devDependencies": {

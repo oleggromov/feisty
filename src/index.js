@@ -1,4 +1,4 @@
-const build = require('./build')
+const build = require('./build/index')
 
 module.exports = {
   build

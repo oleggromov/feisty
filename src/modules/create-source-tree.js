@@ -8,19 +8,19 @@ const createSourceTree = (pagePath, common) => {
   const source = readYaml(pagePath)
 
   return objectDeepMap(source, (key, value) => {
-    const hasMarkdown = Boolean(value.match(/\.md$/))
-    const hasYaml = Boolean(value.match(/\.yml$/))
+    const isMarkdown = value.match(/\.md$/)
+    const isYaml = value.match(/\.yml$/)
     const isList = key === 'list'
-    const sourcePath = (hasMarkdown || hasYaml || isList)
+    const sourcePath = (isMarkdown || isYaml || isList)
       ? path.resolve(currentDir, value)
       : ''
 
     if (isList) {
       return glob.sync(sourcePath)
         .map(fullPath => createSourceTree(fullPath, readYaml(fullPath)))
-    } else if (hasMarkdown) {
+    } else if (isMarkdown) {
       return readMarkdown(sourcePath)
-    } else if (hasYaml) {
+    } else if (isYaml) {
       return createSourceTree(sourcePath, readYaml(sourcePath))
     }
 
