@@ -24,16 +24,13 @@ const renderCssBundles = bundles =>
 const renderJsBundles = bundles =>
   bundles.map(bundle => `<script src="${bundle}"></script>`)
 
-const wrapComponent = ({ title, bundles, stringifiedData }) => {
+const wrapComponent = ({ bundles, stringifiedData }) => {
   const { css, js } = splitBundles(bundles)
   return `<!doctype html>
 <html>
 <head>
-  <title>${title}</title>
   ${renderCssBundles(css)}
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700&display=swap&subset=cyrillic" rel="stylesheet">
-  <link href="/favicon.png" rel="icon" />
+  {{ PAGE_HEAD }}
 </head>
 <body>
   <div id="root">{{ COMPONENT_HTML }}</div>
@@ -47,7 +44,6 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
   const pageName = page.data.page
   const stringifiedData = JSON.stringify(page)
   const template = wrapComponent({
-    title: page.data.meta.title,
     bundles: pageBundles[pageName],
     stringifiedData
   })
@@ -56,15 +52,18 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
     "${page.meta.writePath}": function () {
       const Component = require('${pageComponents[pageName]}').default
       const componentHtml = ReactDOMServer.renderToString(<Component data={${stringifiedData}} />)
+      const headContents = Helmet.renderStatic()
       return (\`${template}\`)
         .replace('{{ COMPONENT_HTML }}', componentHtml)
         .replace('{{ COMPONENT_DATA }}', JSON.stringify(${stringifiedData}))
+        .replace('{{ PAGE_HEAD }}', headContents)
     }`
 }
 
 module.exports = (pages, pageComponents, pageBundles) => [
     `import React from 'react'
     import ReactDOMServer from 'react-dom/server'
+    import { Helmet } from 'react-helmet'
     module.exports = {`,
       pages.map(page => renderPageFunction(page, pageBundles, pageComponents)),
     '}'
