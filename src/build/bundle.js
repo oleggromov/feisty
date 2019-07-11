@@ -10,7 +10,8 @@ const bundleServer = async function ({ source, outDir }) {
     cache: false,
     target: 'node',
     sourceMaps: false,
-    logLevel: 1
+    logLevel: 1,
+    publicUrl: '../assets/'
   })
 
   const bundle = await bundler.bundle()
@@ -27,7 +28,8 @@ const bundleClient = async function ({ sources, outDir }) {
     target: 'browser',
     sourceMaps: false,
     logLevel: 1,
-    hmr: false
+    hmr: false,
+    publicUrl: '../assets/'
   })
 
   const result = await bundler.bundle()
