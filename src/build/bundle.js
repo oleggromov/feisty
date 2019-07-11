@@ -26,7 +26,8 @@ const bundleClient = async function ({ sources, outDir }) {
     cache: false,
     target: 'browser',
     sourceMaps: false,
-    logLevel: 1
+    logLevel: 1,
+    hmr: false
   })
 
   const result = await bundler.bundle()

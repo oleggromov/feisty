@@ -38,11 +38,11 @@ module.exports = async ({ cwd }) => {
 
   const bundles = await bundleClient({
     sources: path.join(tmpFolder, 'bundles/*.js'),
-    outDir: path.join(buildFolder, '_static')
+    outDir: path.join(buildFolder, 'assets')
   })
   const pageBundles = objectDeepMap(
     bundles,
-    (key, value) => `../_static/${value}`
+    (key, value) => `../assets/${value}`
   )
 
   const jsSource = ssrTemplate(pages, pageComponents, pageBundles)
