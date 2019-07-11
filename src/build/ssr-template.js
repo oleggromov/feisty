@@ -52,7 +52,13 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
     "${page.meta.writePath}": function () {
       const Component = require('${pageComponents[pageName]}').default
       const componentHtml = ReactDOMServer.renderToString(<Component data={${stringifiedData}} />)
-      const headContents = Helmet.renderStatic()
+      const helmet = Helmet.renderStatic()
+      const headContents = [
+        helmet.title.toString(),
+        helmet.meta.toString(),
+        helmet.link.toString()
+      ].join('')
+
       return (\`${template}\`)
         .replace('{{ COMPONENT_HTML }}', componentHtml)
         .replace('{{ COMPONENT_DATA }}', JSON.stringify(${stringifiedData}))
