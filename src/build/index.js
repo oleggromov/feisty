@@ -8,12 +8,13 @@ const objectDeepMap = require('../modules/object-deep-map')
 const path = require('path')
 
 module.exports = async ({ cwd }) => {
+  const start = process.hrtime()
+
   const buildFolder = path.join(cwd, 'build')
   const tmpFolder = path.join(cwd, '.feisty')
   cleanDir(buildFolder)
   cleanDir(tmpFolder)
 
-  const start = process.hrtime()
   const pages = getPages({ rootDir: path.join(cwd, 'content/pages') })
 
   pages.forEach(page => {
@@ -30,12 +31,15 @@ module.exports = async ({ cwd }) => {
 
   for (let page in pageComponents) {
     const clientBundle = bundleTemplate(pageComponents[page])
+    const bundlePath = path.join(tmpFolder, 'bundles', `${page}.js`)
+    console.log(`Client bundle ${bundlePath}...`)
     writeFile({
-      filename: path.join(tmpFolder, 'bundles', `${page}.js`),
+      filename: bundlePath,
       content: clientBundle
     })
   }
 
+  console.log('Processing all client bundles...')
   const bundles = await bundleClient({
     sources: path.join(tmpFolder, 'bundles/*.js'),
     outDir: path.join(buildFolder, 'assets')
@@ -46,11 +50,14 @@ module.exports = async ({ cwd }) => {
   )
 
   const jsSource = ssrTemplate(pages, pageComponents, pageBundles)
+  const ssrPath = path.join(tmpFolder, 'ssr/ssr.js')
+  console.log(`SSR template ${ssrPath}...`)
   writeFile({
-    filename: path.join(tmpFolder, 'ssr/ssr.js'),
+    filename: ssrPath,
     content: jsSource
   })
 
+  console.log('Processing server bundle...')
   const bundledSsr = await bundleServer({
     source: path.join(tmpFolder, 'ssr/ssr.js'),
     outDir: path.join(tmpFolder, 'parcel')
@@ -65,6 +72,6 @@ module.exports = async ({ cwd }) => {
     })
   }
 
-  const ms = Math.ceil(process.hrtime(start)[1] / 1e6)
-  console.log(`The build process took ${ms}ms`)
+  const ms = process.hrtime(start)[0] * 1000 + process.hrtime(start)[1] / 1e6
+  console.log(`The build process took ${Math.ceil(ms)}ms`)
 }

@@ -7,7 +7,6 @@ const bundleServer = async function ({ source, outDir }) {
   const bundler = new Bundler(source, {
     outDir,
     outFile,
-    cache: false,
     target: 'node',
     sourceMaps: false,
     logLevel: 1,
@@ -24,10 +23,10 @@ const bundleServer = async function ({ source, outDir }) {
 const bundleClient = async function ({ sources, outDir }) {
   const bundler = new Bundler(sources, {
     outDir,
-    cache: false,
     target: 'browser',
     sourceMaps: false,
     logLevel: 1,
+    minify: false,
     hmr: false,
     publicUrl: '../assets/'
   })
