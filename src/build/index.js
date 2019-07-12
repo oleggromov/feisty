@@ -1,4 +1,4 @@
-const { cleanDir, writeFile } = require('../modules/fs-utils')
+const { cleanDir, writeFile, copyFile } = require('../modules/fs-utils')
 const getPages = require('./get-pages')
 const { bundleServer, bundleClient } = require('./bundle')
 const ssrTemplate = require('./ssr-template')
@@ -10,12 +10,14 @@ const path = require('path')
 module.exports = async ({ cwd }) => {
   const start = process.hrtime()
 
+  const pagesRootDir = path.join(cwd, 'content/pages')
   const buildFolder = path.join(cwd, 'build')
   const tmpFolder = path.join(cwd, '.feisty')
   cleanDir(buildFolder)
   cleanDir(tmpFolder)
 
-  const pages = getPages({ rootDir: path.join(cwd, 'content/pages') })
+  const foundImages = {}
+  const pages = getPages({ rootDir: pagesRootDir, foundImages })
 
   pages.forEach(page => {
     writeFile({
@@ -70,6 +72,14 @@ module.exports = async ({ cwd }) => {
       filename: path.join(buildFolder, pagePath),
       content: bundledSsr[key]()
     })
+  }
+
+  console.log('Copying images...')
+  for (let page in foundImages) {
+    foundImages[page].forEach(image => copyFile({
+      from: path.join(pagesRootDir, page, image),
+      to: path.join(buildFolder, page, image)
+    }))
   }
 
   const ms = process.hrtime(start)[0] * 1000 + process.hrtime(start)[1] / 1e6

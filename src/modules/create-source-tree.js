@@ -3,7 +3,7 @@ const { readYaml, readMarkdown } = require('./read')
 const glob = require('glob')
 const path = require('path')
 
-const createSourceTree = (pagePath, common) => {
+const createSourceTree = (pagePath, { pageUrl, foundImages = [] } = {}) => {
   const currentDir = path.parse(pagePath).dir
   const source = readYaml(pagePath)
 
@@ -19,7 +19,7 @@ const createSourceTree = (pagePath, common) => {
       return glob.sync(sourcePath)
         .map(fullPath => createSourceTree(fullPath, readYaml(fullPath)))
     } else if (isMarkdown) {
-      return readMarkdown(sourcePath)
+      return readMarkdown(sourcePath, { foundImages, baseImageUrl: pageUrl })
     } else if (isYaml) {
       return createSourceTree(sourcePath, readYaml(sourcePath))
     }
