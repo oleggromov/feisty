@@ -1,5 +1,4 @@
-module.exports = (pageComponent) => `
-import React from 'react'
+module.exports = (pageComponent) => `import React from 'react'
 import ReactDOM from 'react-dom'
 import Component from '${pageComponent}'
 const data = JSON.parse(document.querySelector('#data').text)
