@@ -62,7 +62,7 @@ module.exports = async ({ cwd }) => {
   console.log('Processing server bundle...')
   const bundledSsr = await bundleServer({
     source: path.join(tmpFolder, 'ssr/ssr.js'),
-    outDir: path.join(tmpFolder, 'parcel')
+    outDir: path.join(tmpFolder, 'rollup')
   })
 
   for (let key in bundledSsr) {

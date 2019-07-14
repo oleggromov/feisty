@@ -52,7 +52,6 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
     "${page.meta.writePath}": function () {
       const Component = require('${pageComponents[pageName]}').default
       const componentHtml = ReactDOMServer.renderToString(<Component data={${stringifiedData}} />)
-      const helmet = Helmet.renderStatic()
       const headContents = [
         helmet.title.toString(),
         helmet.meta.toString(),
@@ -70,7 +69,7 @@ module.exports = (pages, pageComponents, pageBundles) => [
     `import React from 'react'
     import ReactDOMServer from 'react-dom/server'
     import { Helmet } from 'react-helmet'
-    module.exports = {`,
+    export default {`,
       pages.map(page => renderPageFunction(page, pageBundles, pageComponents)),
     '}'
   ].join('\n')

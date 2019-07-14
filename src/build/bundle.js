@@ -1,49 +1,49 @@
-const Bundler = require('parcel-bundler')
-const path = require('path');
-const fs = require('fs')
+const path = require('path')
+const rollup = require('rollup')
+const babel = require('rollup-plugin-babel')
+const resolve = require('rollup-plugin-node-resolve')
+const commonjs = require('rollup-plugin-commonjs')
 
-const bundleServer = async function ({ source, outDir }) {
-  const outFile = 'ssr.js'
-  const bundler = new Bundler(source, {
-    outDir,
-    outFile,
-    target: 'node',
-    sourceMaps: false,
-    logLevel: 1,
-    publicUrl: '../assets/'
+const bundleServer = async ({ source, outDir }) => {
+  console.log('server', source, outDir)
+
+  const bundle = await rollup.rollup({
+    input: source,
+    plugins: [
+      babel({
+        babelrc: false,
+        presets: [
+          ['@babel/preset-env', { modules: false }],
+          '@babel/preset-react'
+        ]
+      }),
+      resolve(),
+      commonjs()
+    ]
   })
 
-  const bundle = await bundler.bundle()
-  const builtPath = path.join(outDir, outFile)
+  console.log(bundle)
+
+  const outputOptions = {
+    dir: outDir,
+    format: 'cjs'
+  }
+
+  const { output } = await bundle.generate(outputOptions)
+
+  // console.log(output)
+
+  await bundle.write(outputOptions);
+
+  const builtPath = path.join(outDir, 'ssr.js')
 
   delete require.cache[require.resolve(builtPath)]
   return require(builtPath)
 }
 
-const bundleClient = async function ({ sources, outDir }) {
-  const bundler = new Bundler(sources, {
-    outDir,
-    target: 'browser',
-    sourceMaps: false,
-    logLevel: 1,
-    minify: false,
-    hmr: false,
-    publicUrl: '../assets/'
-  })
-
-  const result = await bundler.bundle()
-  const bundleMap = {}
-
-  result.childBundles.forEach(bundle => {
-    const children = []
-    children.push(path.parse(bundle.name).base)
-    bundle.childBundles.forEach(bundle => {
-      children.push(path.parse(bundle.name).base)
-    })
-    bundleMap[path.parse(bundle.entryAsset.basename).name] = children
-  })
-
-  return bundleMap
+const bundleClient = async ({ sources, outDir}) => {
+  // console.log('client')
+  // console.log(sources, outDir)
 }
 
 module.exports = {
