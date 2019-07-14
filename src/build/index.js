@@ -70,7 +70,7 @@ module.exports = async ({ cwd }) => {
     console.log(`Writing ${pagePath}...`)
     writeFile({
       filename: path.join(buildFolder, pagePath),
-      content: bundledSsr[key]()
+      content: await bundledSsr[key]()
     })
   }
 

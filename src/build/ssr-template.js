@@ -50,13 +50,9 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
 
   return `
     "${page.meta.writePath}": function () {
-      const Component = require('${pageComponents[pageName]}').default
-      const componentHtml = ReactDOMServer.renderToString(<Component data={${stringifiedData}} />)
-      const headContents = [
-        helmet.title.toString(),
-        helmet.meta.toString(),
-        helmet.link.toString()
-      ].join('')
+      const Page = Page_${pageName}
+      const componentHtml = ReactDOMServer.renderToString(<Page data={${stringifiedData}} />)
+      const headContents = ''
 
       return (\`${template}\`)
         .replace('{{ COMPONENT_HTML }}', componentHtml)
@@ -65,11 +61,19 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
     }`
 }
 
-module.exports = (pages, pageComponents, pageBundles) => [
-    `import React from 'react'
-    import ReactDOMServer from 'react-dom/server'
-    import { Helmet } from 'react-helmet'
-    export default {`,
-      pages.map(page => renderPageFunction(page, pageBundles, pageComponents)),
-    '}'
+module.exports = (pages, pageComponents, pageBundles) => {
+  const componentImports = []
+
+  for (let id in pageComponents) {
+    componentImports.push(`import Page_${id} from '${pageComponents[id]}'`)
+  }
+
+  return [
+`import React from 'react'
+import ReactDOMServer from 'react-dom/server'`,
+componentImports.join('\n'),
+`export default {`,
+  pages.map(page => renderPageFunction(page, pageBundles, pageComponents)),
+'}'
   ].join('\n')
+}
