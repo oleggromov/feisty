@@ -1,52 +1,70 @@
-const Bundler = require('parcel-bundler')
-const path = require('path');
+const path = require('path')
+const glob = require('glob')
 const fs = require('fs')
+const webpack = require('webpack')
+const { prerender, client } = require('./webpack-config')
 
-const bundleServer = async function ({ source, outDir }) {
-  const outFile = 'ssr.js'
-  const bundler = new Bundler(source, {
+const publicPath = '../assets/'
+
+const bundlePrerender = async ({ source, outDir }) => {
+  const outFile = 'ssr-built.js'
+  const prerenderConfig = prerender({
+    entry: source,
     outDir,
     outFile,
-    target: 'node',
-    sourceMaps: false,
-    logLevel: 1,
-    publicUrl: '../assets/'
+    mode: 'development',
+    publicPath
   })
 
-  const bundle = await bundler.bundle()
-  const builtPath = path.join(outDir, outFile)
+  return new Promise((resolve, reject) => {
+    webpack(prerenderConfig).run((err, stats) => {
+      if (err || stats.hasErrors()) {
+        reject(new Error(err))
+        console.error(stats.compilation.errors)
+        console.error(stats.compilation.warnings)
+      }
 
-  delete require.cache[require.resolve(builtPath)]
-  return require(builtPath)
+      const builtPath = path.join(outDir, outFile)
+      delete require.cache[require.resolve(builtPath)]
+      resolve( require(builtPath))
+    })
+  })
 }
 
-const bundleClient = async function ({ sources, outDir }) {
-  const bundler = new Bundler(sources, {
+const bundleClient = async ({ sources, outDir }) => {
+  const entries = glob.sync(sources).reduce((entries, filename) => {
+    entries[path.parse(filename).name] = filename
+    return entries
+  }, {})
+
+  const clientConfig = client({
+    entry: entries,
     outDir,
-    target: 'browser',
-    sourceMaps: false,
-    logLevel: 1,
-    minify: false,
-    hmr: false,
-    publicUrl: '../assets/'
+    mode: 'production',
+    publicPath
   })
 
-  const result = await bundler.bundle()
-  const bundleMap = {}
+  return new Promise((resolve, reject) => {
+    webpack(clientConfig).run((err, stats) => {
+      if (err || stats.hasErrors()) {
+        reject(new Error(err))
+        console.error(stats.compilation.errors)
+        console.error(stats.compilation.warnings)
+      }
 
-  result.childBundles.forEach(bundle => {
-    const children = []
-    children.push(path.parse(bundle.name).base)
-    bundle.childBundles.forEach(bundle => {
-      children.push(path.parse(bundle.name).base)
+      const entrypoints = stats.toJson().entrypoints
+      const bundles = {}
+
+      for (let key in entrypoints) {
+        bundles[key] = entrypoints[key].assets.map(asset => path.join(publicPath, asset))
+      }
+
+      resolve(bundles)
     })
-    bundleMap[path.parse(bundle.entryAsset.basename).name] = children
   })
-
-  return bundleMap
 }
 
 module.exports = {
-  bundleServer,
+  bundlePrerender,
   bundleClient
 }

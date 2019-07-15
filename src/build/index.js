@@ -1,6 +1,6 @@
 const { cleanDir, writeFile, copyFile } = require('../modules/fs-utils')
 const getPages = require('./get-pages')
-const { bundleServer, bundleClient } = require('./bundle')
+const { bundlePrerender, bundleClient } = require('./bundle')
 const ssrTemplate = require('./ssr-template')
 const bundleTemplate = require('./bundle-template')
 const { readYaml } = require('../modules/read')
@@ -46,12 +46,8 @@ module.exports = async ({ cwd }) => {
     sources: path.join(tmpFolder, 'bundles/*.js'),
     outDir: path.join(buildFolder, 'assets')
   })
-  const pageBundles = objectDeepMap(
-    bundles,
-    (key, value) => `../assets/${value}`
-  )
 
-  const jsSource = ssrTemplate(pages, pageComponents, pageBundles)
+  const jsSource = ssrTemplate(pages, pageComponents, bundles)
   const ssrPath = path.join(tmpFolder, 'ssr/ssr.js')
   console.log(`SSR template ${ssrPath}...`)
   writeFile({
@@ -60,9 +56,9 @@ module.exports = async ({ cwd }) => {
   })
 
   console.log('Processing server bundle...')
-  const bundledSsr = await bundleServer({
+  const bundledSsr = await bundlePrerender({
     source: path.join(tmpFolder, 'ssr/ssr.js'),
-    outDir: path.join(tmpFolder, 'parcel')
+    outDir: path.join(tmpFolder, 'ssr')
   })
 
   for (let key in bundledSsr) {
