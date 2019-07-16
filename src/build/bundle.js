@@ -4,7 +4,7 @@ const fs = require('fs')
 const webpack = require('webpack')
 const { prerender, client } = require('./webpack-config')
 
-const publicPath = '../assets/'
+const publicPath = '/assets/'
 
 const bundlePrerender = async ({ source, outDir }) => {
   const outFile = 'ssr-built.js'

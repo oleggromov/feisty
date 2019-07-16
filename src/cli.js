@@ -11,9 +11,12 @@ module.exports = async function () {
 
   if (command in feisty) {
     await feisty[command]({ cwd: process.cwd() })
-    process.exit(0)
-  }
 
-  console.error(unknownCommand)
-  process.exit(1)
+    if (command !== 'dev') {
+      process.exit(0)
+    }
+  } else {
+    console.error(unknownCommand)
+    process.exit(1)
+  }
 }
