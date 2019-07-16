@@ -12,7 +12,6 @@ const bundlePrerender = async ({ source, outDir }) => {
     entry: source,
     outDir,
     outFile,
-    mode: 'development',
     publicPath
   })
 
@@ -40,7 +39,6 @@ const bundleClient = async ({ sources, outDir }) => {
   const clientConfig = client({
     entry: entries,
     outDir,
-    mode: 'production',
     publicPath
   })
 

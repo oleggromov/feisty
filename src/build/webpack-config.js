@@ -1,4 +1,6 @@
+const TerserJSPlugin = require('terser-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 const jsLoader = {
   test: /\.js$/,
@@ -12,10 +14,10 @@ const jsLoader = {
 }
 
 module.exports = {
-  prerender: ({ entry, outDir, outFile, mode, publicPath }) => {
+  prerender: ({ entry, outDir, outFile, publicPath }) => {
     return {
       entry,
-      mode,
+      mode: 'development',
       target: 'node',
       output: {
         filename: outFile,
@@ -48,16 +50,17 @@ module.exports = {
     }
   },
 
-  client: ({ entry, outDir, mode, publicPath }) => {
+  client: ({ entry, outDir, publicPath }) => {
     return {
       entry,
-      mode,
+      mode: 'production',
       output: {
         filename: '[name].[hash:6].js',
         path: outDir,
         publicPath
       },
       optimization: {
+        minimizer: [new TerserJSPlugin(), new OptimizeCSSAssetsPlugin()],
         splitChunks: {
           chunks: 'initial',
           minChunks: 1,
