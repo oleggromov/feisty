@@ -1,10 +1,12 @@
 const path = require('path')
 const glob = require('glob')
 const createSourceTree = require('../modules/create-source-tree')
+const markActiveItems = require('../modules/mark-active-items')
+const clone = require('../modules/clone')
 
 const getPages = ({ rootDir, foundImages }) => {
   // ToDo: add checks here
-  const common = createSourceTree(`${rootDir}/common.yml`)
+  const { footer, menu } = createSourceTree(`${rootDir}/common.yml`)
 
   return glob.sync(`${rootDir}/**/index.yml`)
     .map(fullPath => {
@@ -13,6 +15,9 @@ const getPages = ({ rootDir, foundImages }) => {
         .replace(/^(\/)?/, '/')
 
       foundImages[pageUrl] = []
+
+      const modifiedMenu = clone(menu)
+      modifiedMenu.items = markActiveItems(modifiedMenu.items, pageUrl)
 
       return {
         meta: {
@@ -24,7 +29,10 @@ const getPages = ({ rootDir, foundImages }) => {
           pageUrl,
           foundImages: foundImages[pageUrl]
         }),
-        common
+        common: {
+          footer,
+          menu: modifiedMenu
+        }
       }
     })
 }
