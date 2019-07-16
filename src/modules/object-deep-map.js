@@ -9,6 +9,8 @@ const objectDeepMap = (source, fn) => {
         }
         return fn(null, value)
       })
+    } else if (source[key] instanceof Date) {
+      result[key] = source[key]
     } else if (typeof source[key] === 'object') {
       result[key] = objectDeepMap(source[key], fn)
     } else {
