@@ -6,7 +6,7 @@ const clone = require('../modules/clone')
 
 const getPages = ({ rootDir, foundImages }) => {
   // ToDo: add checks here
-  const { footer, menu } = createSourceTree(`${rootDir}/common.yml`)
+  const common = createSourceTree(`${rootDir}/common.yml`)
 
   return glob.sync(`${rootDir}/**/index.yml`)
     .map(fullPath => {
@@ -16,8 +16,8 @@ const getPages = ({ rootDir, foundImages }) => {
 
       foundImages[pageUrl] = []
 
-      const modifiedMenu = clone(menu)
-      modifiedMenu.items = markActiveItems(modifiedMenu.items, pageUrl)
+      modifiedCommon = clone(common)
+      modifiedCommon.menu.items = markActiveItems(modifiedCommon.menu.items, pageUrl)
 
       return {
         meta: {
@@ -29,10 +29,7 @@ const getPages = ({ rootDir, foundImages }) => {
           pageUrl,
           foundImages: foundImages[pageUrl]
         }),
-        common: {
-          footer,
-          menu: modifiedMenu
-        }
+        common: modifiedCommon
       }
     })
 }
