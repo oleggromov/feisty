@@ -23,8 +23,6 @@ module.exports = async ({ cwd }) => {
 
   const server = http.createServer((request, response) => handler(request, response, options))
 
-  await build({ cwd })
-
   server.listen(8080, () => {
     console.log('Running at http://localhost:8080');
   })
