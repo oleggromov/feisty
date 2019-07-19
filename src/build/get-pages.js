@@ -9,10 +9,6 @@ const getUrl = (rootDir, fullPath) => path.relative(rootDir, fullPath)
   .replace(/(\/)?index.yml/, '')
   .replace(/^(\/)?/, '/')
 
-const sortByPublished = (a, b) => {
-  return new Date(b.published) - new Date(a.published)
-}
-
 const createSourceTree = (pagePath, { pageUrl, foundImages = [] } = {}) => {
   const currentDir = path.parse(pagePath).dir
   const source = readYaml(pagePath)

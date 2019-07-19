@@ -8,6 +8,10 @@ const objectDeepMap = require('../modules/object-deep-map')
 const glob = require('glob')
 const path = require('path')
 
+const byPublished = (a, b) => {
+  return new Date(b.data.published) - new Date(a.data.published)
+}
+
 module.exports = async ({ cwd }) => {
   const start = process.hrtime()
 
@@ -44,7 +48,7 @@ module.exports = async ({ cwd }) => {
           matchingPages.push(urlPageMap[url])
         }
       }
-      page.data.pages = matchingPages
+      page.data.pages = matchingPages.sort(byPublished)
     }
   })
 
