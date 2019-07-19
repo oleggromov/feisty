@@ -5,6 +5,7 @@ const ssrTemplate = require('./ssr-template')
 const bundleTemplate = require('./bundle-template')
 const { readYaml } = require('../modules/read')
 const objectDeepMap = require('../modules/object-deep-map')
+const glob = require('glob')
 const path = require('path')
 
 module.exports = async ({ cwd }) => {
@@ -17,7 +18,35 @@ module.exports = async ({ cwd }) => {
   cleanDir(tmpFolder)
 
   const foundImages = {}
-  const pages = getPages({ rootDir: pagesRootDir, foundImages })
+  const pages = getPages({
+    sources: glob.sync(`${pagesRootDir}/**/index.yml`),
+    rootDir: pagesRootDir,
+    foundImages
+  })
+
+  const urlPageMap = pages.reduce((acc, page) => {
+    const url = page.meta.url
+    if (acc[url]) {
+      throw new Error(`Duplicate URL ${url}`)
+    }
+
+    acc[url] = page
+    return acc
+  }, {})
+
+  pages.forEach(page => {
+    const urlFilter = page.data.pages
+    if (urlFilter) {
+      const filter = new RegExp(urlFilter)
+      const matchingPages = []
+      for (let url in urlPageMap) {
+        if (url.match(filter)) {
+          matchingPages.push(urlPageMap[url])
+        }
+      }
+      page.data.pages = matchingPages
+    }
+  })
 
   pages.forEach(page => {
     writeFile({
