@@ -15,7 +15,7 @@ const renderCssBundles = bundles =>
 const renderJsBundles = bundles =>
   bundles.map(bundle => `<script src="${bundle}"></script>`)
 
-const wrapComponent = ({ bundles, stringifiedData }) => {
+const wrapComponent = ({ bundles }) => {
   const { css, js } = splitBundles(bundles)
   return `<!doctype html>
 <html>
@@ -34,10 +34,7 @@ const wrapComponent = ({ bundles, stringifiedData }) => {
 const renderPageFunction = (page, pageBundles, pageComponents) => {
   const pageName = page.data.page
   const stringifiedData = JSON.stringify(page)
-  const template = wrapComponent({
-    bundles: pageBundles[pageName],
-    stringifiedData
-  })
+  const template = wrapComponent({ bundles: pageBundles[pageName] })
 
   return `"${page.meta.writePath}": function () {
   const Component = require('${pageComponents[pageName]}').default
