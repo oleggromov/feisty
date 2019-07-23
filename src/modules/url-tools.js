@@ -6,4 +6,11 @@ const resolveUrl = (url, base) => {
   return base.replace(/\/?$/, '/') + url
 }
 
-module.exports = resolveUrl
+const getIsInternal = (url) => {
+  return Boolean(url.match(/^\/{1}\w+/))
+}
+
+module.exports = {
+  resolveUrl,
+  getIsInternal
+}
