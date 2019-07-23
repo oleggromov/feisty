@@ -11,10 +11,13 @@ const getCustomRenderer = options => {
     foundImages.push(href)
 
     return [
-      `<img src="${resolveUrl(href, baseImageUrl)}"`,
+      '<figure class="source-image">',
+      `<img src="${resolveUrl(href, baseImageUrl)}" `,
       text ? ` alt="${text}"` : '',
       title ? ` title="${title}"` : '',
-      ' />'
+      ' />',
+      title ? `<figcaption>${title}</figcaption>` : '',
+      '</figure>'
     ].join('')
   }
 
