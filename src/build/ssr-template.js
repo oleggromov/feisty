@@ -44,7 +44,8 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
   const headContents = [
     helmet.title.toString(),
     helmet.meta.toString(),
-    helmet.link.toString()
+    helmet.link.toString(),
+    helmet.script.toString()
   ].map(str => str.replace(/\\s*data-react-helmet="true"/g, '')).join('\\n')
 
   return (\`${template}\`)
