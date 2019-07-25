@@ -38,7 +38,8 @@ const renderPageFunction = (page, pageBundles, pageComponents) => {
 
   return `"${page.meta.writePath}": function () {
   const Component = require('${pageComponents[pageName]}').default
-  const componentHtml = ReactDOMServer.renderToString(<Component data={${stringifiedData}} />)
+  const { meta, data, common } = ${stringifiedData}
+  const componentHtml = ReactDOMServer.renderToString(<Component meta={meta} data={data} common={common} />)
   const helmet = Helmet.renderStatic()
   const headContents = [
     helmet.title.toString(),

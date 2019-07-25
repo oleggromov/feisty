@@ -47,16 +47,20 @@ const getPages = ({ sources, rootDir, foundImages }) => {
     modifiedCommon = clone(common)
     modifiedCommon.menu.items = markActiveItems(modifiedCommon.menu.items, pageUrl)
 
+    const pageData = createSourceTree(fullPath, {
+      pageUrl,
+      foundImages: foundImages[pageUrl]
+    })
+    const pageDataMeta = pageData.meta
+    delete pageData.meta
+
     return {
       meta: {
-        writePath: path.relative(rootDir, fullPath)
-          .replace(/\.yml$/, '.json'),
+        ...pageDataMeta,
+        writePath: path.relative(rootDir, fullPath).replace(/\.yml$/, '.json'),
         url: pageUrl
       },
-      data: createSourceTree(fullPath, {
-        pageUrl,
-        foundImages: foundImages[pageUrl]
-      }),
+      data: pageData,
       common: modifiedCommon
     }
   })
