@@ -40,7 +40,7 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                   emitFile: false,
-                  name: '[name].[hash:6].[ext]'
+                  name: '[name].[contenthash:6].[ext]'
                 }
               },
             ],
@@ -55,9 +55,10 @@ module.exports = {
       entry,
       mode: 'production',
       output: {
-        filename: '[name].[hash:6].js',
+        filename: '[name].[contenthash:6].js',
         path: outDir,
-        publicPath
+        publicPath,
+        chunkFilename: '[name].[contenthash:6].js'
       },
       optimization: {
         minimizer: [new TerserJSPlugin(), new OptimizeCSSAssetsPlugin()],
@@ -76,7 +77,7 @@ module.exports = {
       },
       plugins: [
         new MiniCssExtractPlugin({
-          filename: '[name].[hash:6].css'
+          filename: '[name].[contenthash:6].css'
         }),
       ],
       module: {
@@ -105,7 +106,7 @@ module.exports = {
               {
                 loader: 'file-loader',
                 options: {
-                  name: '[name].[hash:6].[ext]'
+                  name: '[name].[contenthash:6].[ext]'
                 }
               },
             ],
