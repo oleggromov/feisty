@@ -7,6 +7,7 @@ const { readYaml } = require('../modules/read')
 const objectDeepMap = require('../modules/object-deep-map')
 const glob = require('glob')
 const path = require('path')
+require('dotenv').config()
 
 const byPublished = (a, b) => {
   return new Date(b.data.published) - new Date(a.data.published)
