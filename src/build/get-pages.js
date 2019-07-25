@@ -13,6 +13,11 @@ const createSourceTree = (pagePath, { pageUrl, foundImages = [] } = {}) => {
   const currentDir = path.parse(pagePath).dir
   const source = readYaml(pagePath)
 
+  if (source.cover) {
+    foundImages.push(source.cover)
+    source.cover = path.join(pageUrl, source.cover)
+  }
+
   return objectDeepMap(source, (key, value) => {
     const isMarkdown = value.match(/\.md$/)
     const isYaml = value.match(/\.yml$/)

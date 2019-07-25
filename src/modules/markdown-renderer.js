@@ -28,6 +28,7 @@ const getCustomRenderer = options => {
       `<a href="${href}"`,
       ` class="${linkClass}"`,
       !isInternal ? ' target="_blank"' : '',
+      !isInternal ? ' rel="noopener"' : '',
       title ? ` title="${title}"` : '',
       `>${text}</a>`
     ].join('')

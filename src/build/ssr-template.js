@@ -18,7 +18,7 @@ const renderJsBundles = bundles =>
 const wrapComponent = ({ bundles }) => {
   const { css, js } = splitBundles(bundles)
   return `<!doctype html>
-<html>
+<html lang="en">
 <head>
   {{ PAGE_HEAD }}
   ${renderCssBundles(css).join('\n')}
