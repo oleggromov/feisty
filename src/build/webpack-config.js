@@ -34,7 +34,7 @@ module.exports = {
             use: ['css-loader']
           },
           {
-            test: /\.(png|jpe?g|gif)$/,
+            test: /\.(png|jpe?g|gif|svg)$/,
             use: [
               {
                 loader: 'file-loader',
@@ -92,6 +92,7 @@ module.exports = {
                 options: {
                   plugins: [
                     require('postcss-import')(),
+                    require('postcss-assets')(),
                     require('postcss-preset-env')()
                   ]
                 }
@@ -99,7 +100,7 @@ module.exports = {
             ]
           },
           {
-            test: /\.(png|jpe?g|gif)$/,
+            test: /\.(png|jpe?g|gif|svg)$/,
             use: [
               {
                 loader: 'file-loader',
