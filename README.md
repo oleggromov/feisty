@@ -7,6 +7,9 @@ structure and React components and intended to enable small to medium website
 creation.
 
 ## How to Run
+
+**OUTDATED!**
+
 You can run it in dev mode and use to pre-build pages of your website.
 
 - `feisty init` - creates a simple website folder structure
@@ -32,3 +35,15 @@ All `index.yml` files comprise the structure of your website. Each file is read,
 the content is processed with either a Markdown or a YAML parser, and passed to
 the corresponding component so it can render the page. The page is then put on
 the filesystem according to its original placement.
+
+## ToDo
+
+- Extracts paths to some config (we're zero config😜 or not?)
+- Better DevExp:
+  - Faster builds
+  - In-memory FS
+  - Cancel running build on another update
+- Less data in templates (hydration)
+- In-browser transitions between pages
+- Fingerprint the copied from articles (Markdown, cover) files
+- Generate `sitemap.xml`
