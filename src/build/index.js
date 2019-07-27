@@ -7,7 +7,34 @@ const { readYaml } = require('../modules/read')
 const objectDeepMap = require('../modules/object-deep-map')
 const glob = require('glob')
 const path = require('path')
+const clone = require('../modules/clone')
 require('dotenv').config()
+
+const createCompagePageMap = pages => pages.reduce((acc, page) => {
+  const url = page.meta.url
+  if (acc[url]) {
+    throw new Error(`Duplicate URL ${url}`)
+  }
+
+  acc[url] = page
+  return acc
+}, {})
+
+const filterToPages = ({ urlFilter, urlPageMap }) => {
+  const filter = new RegExp(urlFilter)
+  const matchingPages = []
+  for (let url in urlPageMap) {
+    if (url.match(filter)) {
+      matchingPages.push(urlPageMap[url])
+    }
+  }
+  return clone(matchingPages.sort(byPublished))
+    .map(page => {
+      delete page.common
+      delete page.data.content
+      return page
+    })
+}
 
 const byPublished = (a, b) => {
   return new Date(b.data.published) - new Date(a.data.published)
@@ -29,29 +56,26 @@ module.exports = async ({ cwd }) => {
     foundImages
   })
 
-  const urlPageMap = pages.reduce((acc, page) => {
-    const url = page.meta.url
-    if (acc[url]) {
-      throw new Error(`Duplicate URL ${url}`)
-    }
-
-    acc[url] = page
-    return acc
-  }, {})
+  const urlPageMap = createCompagePageMap(pages)
 
   pages.forEach(page => {
-    const urlFilter = page.data.pages
-    if (urlFilter) {
-      const filter = new RegExp(urlFilter)
-      const matchingPages = []
-      for (let url in urlPageMap) {
-        if (url.match(filter)) {
-          matchingPages.push(urlPageMap[url])
-        }
-      }
-      page.data.pages = matchingPages.sort(byPublished)
+    // ToDo: deal with hardcoded keys
+    if (page.data.pages) {
+      page.data.pages = filterToPages({
+        urlFilter: page.data.pages,
+        urlPageMap
+      })
+    }
+
+    if (page.common.pages) {
+      page.common.pages = filterToPages({
+        urlFilter: page.common.pages,
+        urlPageMap
+      })
     }
   })
+
+
 
   pages.forEach(page => {
     writeFile({
