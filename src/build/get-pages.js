@@ -37,7 +37,7 @@ const createSourceTree = (pagePath, { pageUrl, foundImages = [] } = {}) => {
 
 const getPages = ({ sources, rootDir, foundImages }) => {
   // ToDo: add checks here
-  const common = createSourceTree(`${rootDir}/common.yml`)
+  const common = createSourceTree(path.join(rootDir, '../partials/common.yml'))
 
   return sources.map(fullPath => {
     const pageUrl = getUrl(rootDir, fullPath)
