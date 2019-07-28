@@ -7,7 +7,7 @@ const resolveUrl = (url, base) => {
 }
 
 const getIsInternal = (url) => {
-  return Boolean(url.match(/^\/{1}\w+/))
+  return url === '/' || Boolean(url.match(/^\/{1}\w+/))
 }
 
 module.exports = {
