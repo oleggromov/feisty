@@ -7,7 +7,10 @@ const resolveUrl = (url, base) => {
 }
 
 const getIsInternal = (url) => {
-  return url === '/' || Boolean(url.match(/^\/{1}\w+/))
+  const isRoot = url === '/'
+  const isHash = url.match(/^#/)
+  const hasOneHash = url.match(/^\/{1}\w+/)
+  return Boolean(isRoot || isHash || hasOneHash)
 }
 
 module.exports = {

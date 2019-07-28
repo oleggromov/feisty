@@ -26,6 +26,9 @@ describe('getIsInternal', () => {
   it('works for internal URLs', () => {
     expect(getIsInternal('/hello/world')).toBe(true)
     expect(getIsInternal('/')).toBe(true)
+    expect(getIsInternal('/slug')).toBe(true)
+    expect(getIsInternal('#')).toBe(true)
+    expect(getIsInternal('#something')).toBe(true)
   })
 
   it('works for external URLs', () => {
