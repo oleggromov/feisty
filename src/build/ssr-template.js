@@ -1,3 +1,5 @@
+const package = require('../../package.json')
+
 const splitBundles = bundles =>
   bundles.reduce((acc, bundle) => {
     if (bundle.match(/\.css$/)) {
@@ -22,6 +24,8 @@ const wrapComponent = ({ bundles }) => {
 <head>
   {{ PAGE_HEAD }}
   ${renderCssBundles(css).join('\n')}
+  <meta name="generator" content="Feisty.js">
+  <!-- Wondering how to build a static website like that? Visit ${package.repository.url}! -->
 </head>
 <body>
   <div id="root">{{ COMPONENT_HTML }}</div>
