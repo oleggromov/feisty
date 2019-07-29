@@ -7,6 +7,7 @@ const getCustomRenderer = options => {
 
   const Renderer = new marked.Renderer()
 
+  // ToDo: there shall be no <p> around <figure>
   Renderer.image = (href, title, text) => {
     foundImages.push(href)
 

@@ -19,8 +19,9 @@ const createSourceTree = (pagePath, { pageUrl, foundImages = [] } = {}) => {
   }
 
   return objectDeepMap(source, (key, value) => {
-    const isMarkdown = value.match(/\.md$/)
-    const isYaml = value.match(/\.yml$/)
+    const isString = typeof value === 'string'
+    const isMarkdown = isString && value.match(/\.md$/)
+    const isYaml = isString && value.match(/\.yml$/)
     const sourcePath = (isMarkdown || isYaml)
       ? path.resolve(currentDir, value)
       : ''
@@ -54,10 +55,17 @@ const getPages = ({ sources, rootDir, foundImages }) => {
     const pageDataMeta = pageData.meta
     delete pageData.meta
 
+    let relativeWritePath = fullPath
+    if (pageDataMeta && pageDataMeta.writePath) {
+      relativeWritePath = pageDataMeta.writePath
+        .replace(/^~/, rootDir)
+        .replace(/\.html$/, '.yml')
+    }
+
     return {
       meta: {
         ...pageDataMeta,
-        writePath: path.relative(rootDir, fullPath).replace(/\.yml$/, '.json'),
+        writePath: path.relative(rootDir, relativeWritePath).replace(/\.yml$/, '.json'),
         url: pageUrl
       },
       data: pageData,
