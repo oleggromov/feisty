@@ -35,6 +35,13 @@ const getCustomRenderer = options => {
     ].join('')
   }
 
+  Renderer.paragraph = text => {
+    if (text.match(/^<figure/)) {
+      return text
+    }
+    return `<p>${text}</p>`
+  }
+
   return Renderer
 }
 
