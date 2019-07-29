@@ -10,13 +10,18 @@ const path = require('path')
 const clone = require('../modules/clone')
 require('dotenv').config()
 
-const createCompagePageMap = pages => pages.reduce((acc, page) => {
+const createUrlPageMap = pages => pages.reduce((acc, page) => {
   const url = page.meta.url
   if (acc[url]) {
     throw new Error(`Duplicate URL ${url}`)
   }
 
-  acc[url] = page
+  if (!page.data.draft) {
+    acc[url] = page
+  } else {
+    console.log(`Excluding ${url}, as a draft, from the page list...`)
+  }
+
   return acc
 }, {})
 
@@ -56,7 +61,7 @@ module.exports = async ({ cwd }) => {
     foundImages
   })
 
-  const urlPageMap = createCompagePageMap(pages)
+  const urlPageMap = createUrlPageMap(pages)
 
   pages.forEach(page => {
     // ToDo: deal with hardcoded keys
