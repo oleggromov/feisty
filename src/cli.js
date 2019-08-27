@@ -4,6 +4,7 @@ const feisty = require('./index')
 const unknownCommand = `Feisty can't recognize the command.
 Please use the following:
   feisty build
+  feisty dev
 `
 
 module.exports = async function () {

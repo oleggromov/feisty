@@ -1,4 +1,5 @@
 const { cleanDir, writeFile, copyFile } = require('../modules/fs-utils')
+const watermarkImages = require('../modules/watermark-images')
 const getPages = require('./get-pages')
 const { bundlePrerender, bundleClient } = require('./bundle')
 const ssrTemplate = require('./ssr-template')
@@ -133,13 +134,18 @@ module.exports = async ({ cwd }) => {
     })
   }
 
-  console.log('Copying images...')
+  console.log('Adding watermarks and copying images...')
+  const images = []
   for (let page in foundImages) {
-    foundImages[page].forEach(image => copyFile({
-      from: path.join(pagesRootDir, page, image),
-      to: path.join(buildFolder, page, image)
-    }))
+    for (let i = 0; i < foundImages[page].length; i++) {
+      const image = foundImages[page][i]
+      images.push({
+        from: path.join(pagesRootDir, page, image),
+        to: path.join(buildFolder, page, image)
+      })
+    }
   }
+  await watermarkImages(images)
 
   const ms = process.hrtime(start)[0] * 1000 + process.hrtime(start)[1] / 1e6
   console.log(`The build process took ${Math.ceil(ms)}ms`)
