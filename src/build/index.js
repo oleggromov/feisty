@@ -145,7 +145,7 @@ module.exports = async ({ cwd }) => {
       })
     }
   }
-  await watermarkImages(images)
+  await watermarkImages({ images, text: '© oleggromov.com' })
 
   const ms = process.hrtime(start)[0] * 1000 + process.hrtime(start)[1] / 1e6
   console.log(`The build process took ${Math.ceil(ms)}ms`)
