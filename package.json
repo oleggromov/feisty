@@ -27,7 +27,7 @@
     "gm": "^1.23.1",
     "highlight.js": "^9.15.8",
     "js-yaml": "^3.12.2",
-    "marked": "^0.7.0",
+    "marked": "^4.0.10",
     "mini-css-extract-plugin": "^0.7.0",
     "minimatch": "^3.0.4",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
